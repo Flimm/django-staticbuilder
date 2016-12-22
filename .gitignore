@@ -1,2 +1,5 @@
 /dist
 /docs/build
+*.pyc
+__pycache__
+.tox
