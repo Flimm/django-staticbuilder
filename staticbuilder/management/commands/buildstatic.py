@@ -10,9 +10,6 @@ from pipes import quote
 import subprocess
 
 
-t = Terminal()
-
-
 class Command(BaseCommand):
     """
     Executes the shell commands in ``STATICBUILDER_BUILD_COMMANDS``
@@ -33,6 +30,10 @@ class Command(BaseCommand):
             default=True,
             help='Skip collecting static files for build'),
     )
+
+    def __init__(self, *args, **kwargs):
+        super(Command, self).__init__(*args, **kwargs)
+        self.t = Terminal()
 
     def handle(self, *args, **options):
 
@@ -59,7 +60,7 @@ class Command(BaseCommand):
         os.utime(build_dir, None)
 
     def shell(self, cmd):
-        self.log(t.bold('Running command: ') + cmd)
+        self.log(self.t.bold('Running command: ') + cmd)
 
         return_code = subprocess.call(cmd, shell=True)
         if return_code:
@@ -73,6 +74,6 @@ class Command(BaseCommand):
         if not msg.endswith("\n"):
             msg += "\n"
         if level > 1:
-            msg = t.bright_black(msg)
+            msg = self.t.bright_black(msg)
         if self.verbosity >= level:
             self.stdout.write(msg)
